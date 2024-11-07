@@ -79,35 +79,7 @@ unsigned int createShader(GLenum shaderType, const char* shaderSource, unsigned 
 
 void setupVertexData(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO)
 {
-    float vertices[] = 
-    {
-        -0.25f, 0.5f, 0.0f,  // top 1
-         0.0f, -0.5f, 0.0f,  // bottom right 1
-        -0.5f, -0.5f, 0.0f,  // bottom left 1
-         0.25f, 0.5f, 0.0f,  // top 2
-         0.5f, -0.5f, 0.0f,  // bottom right 2
-    };
-    unsigned int indices[] = 
-    {
-        0, 1, 2,   // first triangle
-        3, 4, 1    // second triangle
-    };
-
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void*>(0));
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    
 }
 
 void linkShaders(unsigned int& vertexShader, unsigned int& fragmentShader, unsigned int& shaderProgram)
@@ -139,8 +111,35 @@ int main()
 
 	linkShaders(vertexShader, fragmentShader, shaderProgram);
 
-    unsigned int VBO, VAO, EBO;
-    setupVertexData(VBO, VAO, EBO);
+    // set up vertex data
+    float firstTriangle[] = {
+        -0.5f, -0.5f, 0.0f,  // left 
+         0.0f, -0.5f, 0.0f,  // right
+        -0.25f, 0.5f, 0.0f,  // top 
+    };
+    float secondTriangle[] = {
+        0.0f, -0.5f, 0.0f,  // left
+        0.5f, -0.5f, 0.0f,  // right
+        0.25f, 0.5f, 0.0f   // top 
+    };
+    unsigned int VBOs[2], VAOs[2];
+
+    glGenVertexArrays(2, VAOs);
+    glGenBuffers(2, VBOs);
+
+	// first triangle setup
+    glBindVertexArray(VAOs[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(firstTriangle), firstTriangle, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);	// Vertex attributes stay the same
+    glEnableVertexAttribArray(0);
+
+	// second triangle setup
+    glBindVertexArray(VAOs[1]);	// note that we bind to a different VAO now
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);	// and a different VBO
+    glBufferData(GL_ARRAY_BUFFER, sizeof(secondTriangle), secondTriangle, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // because the vertex data is tightly packed we can also specify 0 as the vertex attribute's stride to let OpenGL figure it out
+    glEnableVertexAttribArray(0);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -152,16 +151,17 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(VAOs[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glBindVertexArray(VAOs[1]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(2, VAOs);
+    glDeleteBuffers(2, VBOs);
     glDeleteProgram(shaderProgram);
 
     glfwTerminate();
