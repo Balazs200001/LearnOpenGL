@@ -77,14 +77,14 @@ public:
     // use/activate the shader
     void use() const { glUseProgram(id); }
     // utility uniform functions
-    void setBool(const std::string& name, const bool value) const { glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value); }
+    void setBool(const std::string& name, const bool value) const { glUniform1i(glGetUniformLocation(id, name.c_str()), static_cast<int>(value)); }
     void setInt(const std::string& name, const int value) const { glUniform1i(glGetUniformLocation(id, name.c_str()), value); }
     void setFloat(const std::string& name, const float value) const { glUniform1f(glGetUniformLocation(id, name.c_str()), value); }
 
 private:
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------
-    void checkCompileErrors(const unsigned int shader, const std::string& type)
+    static void checkCompileErrors(const unsigned int shader, const std::string& type)
     {
         int success;
         char infoLog[1024];

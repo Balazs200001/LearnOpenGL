@@ -144,6 +144,8 @@
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="lib\GLFW\glfw3.dll" />
+    <None Include="shaders\shader.fs" />
+    <None Include="shaders\shader.vs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\GLFW\glfw3.lib" />

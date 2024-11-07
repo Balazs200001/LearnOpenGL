@@ -52,19 +52,19 @@ int main()
         return -1;
     }
 
-	Shader ourShader("shaders/shader.vs", "shaders/shader.fs");
+    const Shader ourShader("shaders/shader.vs", "shaders/shader.fs");
 
     // set up vertex data
     constexpr float firstTriangle[] = {
-        // positions         // colors
-        -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, // left 
-         0.0f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, // right
+        // positions                        // colors
+        -0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f, // left 
+    	0.0f, -0.5f, 0.0f,      0.0f, 1.0f, 0.0f, // right
         -0.25f, 0.5f, 0.0f,  0.0f, 0.0f, 1.0f  // top 
     };
     constexpr float secondTriangle[] = {
-		// positions         // colors
-        0.0f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, // left
-        0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, // right
+		// positions                        // colors
+        0.0f, -0.5f, 0.0f,      1.0f, 0.0f, 0.0f, // left
+        0.5f, -0.5f, 0.0f,      0.0f, 1.0f, 0.0f, // right
         0.25f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f  // top 
     };
     unsigned int vertexBufferObjects[2], vertexArrayObjects[2];
