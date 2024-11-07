@@ -81,15 +81,16 @@ void setupVertexData(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO)
 {
     float vertices[] = 
     {
-         0.5f,  0.5f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left 
+        -0.25f, 0.5f, 0.0f,  // top 1
+         0.0f, -0.5f, 0.0f,  // bottom right 1
+        -0.5f, -0.5f, 0.0f,  // bottom left 1
+         0.25f, 0.5f, 0.0f,  // top 2
+         0.5f, -0.5f, 0.0f,  // bottom right 2
     };
     unsigned int indices[] = 
     {
-        0, 1, 3,   // first triangle
-        1, 2, 3    // second triangle
+        0, 1, 2,   // first triangle
+        3, 4, 1    // second triangle
     };
 
     glGenVertexArrays(1, &VAO);
