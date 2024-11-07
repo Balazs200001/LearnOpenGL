@@ -24,6 +24,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\GLFW\glfw3.dll" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\GLFW\glfw3.lib" />
@@ -41,6 +43,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="includes\glad\glad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

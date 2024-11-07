@@ -141,6 +141,8 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
     <None Include="lib\GLFW\glfw3.dll" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +155,7 @@
     <ClInclude Include="includes\GLFW\glfw3.h" />
     <ClInclude Include="includes\GLFW\glfw3native.h" />
     <ClInclude Include="includes\KHR\khrplatform.h" />
+    <ClInclude Include="src\shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
