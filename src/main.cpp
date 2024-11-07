@@ -4,42 +4,40 @@
 
 #include "shader.h"
 
-using namespace std;
-
 constexpr unsigned int SCR_WIDTH = 800;
 constexpr unsigned int SCR_HEIGHT = 600;
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void frame_buffer_size_callback(GLFWwindow* window, const int width, const int height)
 {
     glViewport(0, 0, width, height);
 }
 
-void processInput(GLFWwindow* window)
+void process_input(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
 
-GLFWwindow* initializeWindow()
+GLFWwindow* initialize_window()
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-    if (window == NULL)
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
+    if (window == nullptr)
     {
-        cout << "Failed to create GLFW window" << '\n';
+	    std::cout << "Failed to create GLFW window" << '\n';
         glfwTerminate();
         return nullptr;
     }
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(window, frame_buffer_size_callback);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))  // NOLINT(clang-diagnostic-cast-function-type-strict)
     {
-        cout << "Failed to initialize GLAD" << '\n';
+	    std::cout << "Failed to initialize GLAD" << '\n';
         return nullptr;
     }
 
@@ -48,7 +46,7 @@ GLFWwindow* initializeWindow()
 
 int main()
 {
-    GLFWwindow* window = initializeWindow();
+    GLFWwindow* window = initialize_window();
     if (window == nullptr)
     {
         return -1;
@@ -69,55 +67,57 @@ int main()
         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, // right
         0.25f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f  // top 
     };
-    unsigned int VBOs[2], VAOs[2];
+    unsigned int vertexBufferObjects[2], vertexArrayObjects[2];
 
-    glGenVertexArrays(2, VAOs);
-    glGenBuffers(2, VBOs);
+    glGenVertexArrays(2, vertexArrayObjects);
+    glGenBuffers(2, vertexBufferObjects);
 
 	// first triangle setup
-    glBindVertexArray(VAOs[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+    glBindVertexArray(vertexArrayObjects[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjects[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(firstTriangle), firstTriangle, GL_STATIC_DRAW);
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), static_cast<void*>(nullptr));
     glEnableVertexAttribArray(0);
     // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
 	// second triangle setup
-    glBindVertexArray(VAOs[1]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
+    glBindVertexArray(vertexArrayObjects[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjects[1]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(secondTriangle), secondTriangle, GL_STATIC_DRAW);
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), static_cast<void*>(nullptr));
     glEnableVertexAttribArray(0);
     // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     while (!glfwWindowShouldClose(window))
     {
-        processInput(window);
+        process_input(window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        const float timeValue = static_cast<float>(glfwGetTime());
 		ourShader.use();
-        glBindVertexArray(VAOs[0]);
+		ourShader.setFloat("xOffset", timeValue / 10.f);
+        glBindVertexArray(vertexArrayObjects[0]);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        glBindVertexArray(VAOs[1]);
+        glBindVertexArray(vertexArrayObjects[1]);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    glDeleteVertexArrays(2, VAOs);
-    glDeleteBuffers(2, VBOs);
+    glDeleteVertexArrays(2, vertexArrayObjects);
+    glDeleteBuffers(2, vertexBufferObjects);
 
     glfwTerminate();
     return 0;
