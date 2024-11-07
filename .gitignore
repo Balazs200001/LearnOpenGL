@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+/.vs/LearnOpenGL
+/LearnOpenGL/x64/Debug
+/x64/Debug
+/LearnOpenGL.vcxproj.user
