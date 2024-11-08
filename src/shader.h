@@ -74,6 +74,7 @@ public:
         glDeleteShader(vertex);
         glDeleteShader(fragment);
     }
+	~Shader() { glDeleteProgram(id); }
     // use/activate the shader
     void use() const { glUseProgram(id); }
     // utility uniform functions
@@ -83,7 +84,6 @@ public:
 
 private:
     // utility function for checking shader compilation/linking errors.
-    // ------------------------------------------------------------------------
     static void checkCompileErrors(const unsigned int shader, const std::string& type)
     {
         int success;
